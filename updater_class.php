@@ -4,7 +4,10 @@ class updater{
 
 
     //Public functions
-    static public function do_file_update($filepath,$update_path,$no_cache = true, $make_backup_file=false,$check_response=true){
+
+
+
+    static public function do_file_update($filepath,$update_path,$no_cache = true, $make_backup_file=false,$check_response=true,$only_update_if_updates_are_at_least_percentage_similar =50){
 
         
         //check vars
@@ -21,6 +24,15 @@ class updater{
             if($response_result =="" || $contents == ""){
                 throw new Exception("updater_class: do_file_update: Local file or update is empty. If this is correct, please update manually.");
             }
+        }
+
+        //check similarity
+        if(self::wordSimilarity($contents,$response_result)<=$only_update_if_updates_are_at_least_percentage_similar){
+                //not high enought similarity
+                $err=array("updater_class: do_file_update: check similarity - not high enought similarity");
+                var_dump($err);
+                throw new Exception("updater_class: do_file_update: " . $err);
+                
         }
         
         //compare values
@@ -53,6 +65,7 @@ class updater{
 
 
 }
+
 
 
 
@@ -153,7 +166,7 @@ function __construct()
     //prevent creating object of updater, if its a private function.
 
     //Update Updater Class
-    self::check_new_update_if_new_inform_admin("updater_class.php","https://raw.githubusercontent.com/dmd2222/php-update-class/main/updater_class.php","",true);
+    self::check_new_update_if_new_inform_admin("updater_class.php","https://raw.githubusercontent.com/dmd2222/php-update-class/main/updater_class.php","",true,50);
 }
 
 
