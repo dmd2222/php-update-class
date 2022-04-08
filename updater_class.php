@@ -99,7 +99,7 @@ class updater{
 {
 
       //Options
-      define("DEBUGGING_MODE",true);
+      define("DEBUGGING_MODE",false);
 
 
     //set all vars
