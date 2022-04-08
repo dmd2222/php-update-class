@@ -3,22 +3,119 @@
 class updater{
 
 
+    private $filepath;
+    private $update_path;
+    private $no_cache;
+    private $make_backup_file;
+    private $check_response;
+    private $only_update_if_updates_are_at_least_percentage_similar;
+
+  
+    //Options in the __construct - Constructore
+
+
     //Public functions
 
+    //Getter Setter
+
+    //### check inputs of setter methodes and throw exception if wrong
+    public function getFilepath(){
+		return $this->filepath;
+	}
+
+	public function setFilepath($filepath){
+		$this->filepath = $filepath;
+	}
+
+	public function getUpdate_path(){
+		return $this->update_path;
+	}
+
+	public function setUpdate_path($update_path){
+		$this->update_path = $update_path;
+	}
+
+	public function getNo_cache(){
+		return $this->no_cache;
+	}
+
+	public function setNo_cache($no_cache){
+		$this->no_cache = $no_cache;
+	}
+
+	public function getMake_backup_file(){
+		return $this->make_backup_file;
+	}
+
+	public function setMake_backup_file($make_backup_file){
+		$this->make_backup_file = $make_backup_file;
+	}
+
+	public function getCheck_response(){
+		return $this->check_response;
+	}
+
+	public function setCheck_response($check_response){
+		$this->check_response = $check_response;
+	}
+
+	public function getOnly_update_if_updates_are_at_least_percentage_similar(){
+		return $this->only_update_if_updates_are_at_least_percentage_similar;
+	}
+
+	public function setOnly_update_if_updates_are_at_least_percentage_similar($only_update_if_updates_are_at_least_percentage_similar){
+		$this->only_update_if_updates_are_at_least_percentage_similar = $only_update_if_updates_are_at_least_percentage_similar;
+	}
 
 
-    static public function do_file_update($filepath,$update_path,$no_cache = true, $make_backup_file=false,$check_response=true,$only_update_if_updates_are_at_least_percentage_similar =50){
+    //OTHER
 
-        
+
+
+
+    public function __construct($filepath,$update_path,$no_cache = true, $make_backup_file=false,$check_response=true,$only_update_if_updates_are_at_least_percentage_similar =50)
+{
+
+      //Options
+      define("DEBUGGING_MODE",true);
+
+
+    //set all vars
+    $this->setFilepath($filepath);
+    $this->setUpdate_path($update_path);
+    $this->setNo_cache($no_cache);
+    $this->setMake_backup_file($make_backup_file);
+    $this->setCheck_response($check_response);
+    $this->setOnly_update_if_updates_are_at_least_percentage_similar($only_update_if_updates_are_at_least_percentage_similar);
+
+
+
+    //Update Updater Class
+    self::check_new_update_if_new_inform_admin("updater_class.php","https://raw.githubusercontent.com/dmd2222/php-update-class/main/updater_class.php","",true,50);
+}
+
+
+
+
+    static public function do_file_update($filepath="",$update_path="",$no_cache = true, $make_backup_file=false,$check_response=true,$only_update_if_updates_are_at_least_percentage_similar =50){
+
+        #$filepath,$update_path,$no_cache = true, $make_backup_file=false,$check_response=true,$only_update_if_updates_are_at_least_percentage_similar =50
+       
+
+
         //check vars
         if(is_string($filepath)<>true)return("Not a valid file path.");
         if(is_string($update_path)<>true)return("Not a valid update path.");
 
+        //file exist
+        if (file_exists($filepath)==false)  throw new Exception("updater_class: do_file_update: Fiel not found. " . $filepath);
 
         //get values
         $response_result = self::download_file_text($update_path,$no_cache);
         $contents = self::read_file($filepath);
         
+        self::debugging_fkt(array("response_result: " ,$response_result ,"contents: " ,$contents,array_shift(debug_backtrace())));//for debugging
+
         //check response
         if($check_response<>false){
             if($response_result =="" || $contents == ""){
@@ -72,9 +169,7 @@ class updater{
 
 
 
-
-
-static public function check_new_update($filepath,$update_path,$no_cache = true){
+static public function check_new_update($filepath="",$update_path="",$no_cache = true){
 
         
         //check vars
@@ -107,6 +202,8 @@ static public function check_new_update_if_new_inform_admin($filepath,$update_pa
                 //create admin email, if not given
                 $domain = $_SERVER['SERVER_NAME'];
                 $admin_email= "admin@" . $domain;
+
+                self::debugging_fkt(array($domain,$admin_email,array_shift(debug_backtrace())));//for debugging
       }
 
       
@@ -116,10 +213,10 @@ static public function check_new_update_if_new_inform_admin($filepath,$update_pa
     $subject="Update required:" .  time();
     $actual_path=dirname(__FILE__);
     $message=$subject . " <br> " . "My file:" . self::hash_my_file($filepath,"sha256") . " File on server: " . self::hash_update_file($update_path,"sha256",true) . " <br> " . "May the service stops working if you dont update the file." . " <br> " . " Location: " . $actual_path;
-    #mail($admin_email, $subject ,$message);
+    mail($admin_email, $subject ,$message);
     
-    #Debugging
-    var_dump(array($admin_email, $subject ,$message));
+    self::debugging_fkt(array($admin_email, $subject ,$message,array_shift(debug_backtrace())));//for debugging
+
     return self::check_new_update($filepath,$update_path,$no_cache);
 
 
@@ -164,14 +261,16 @@ static public function hash_update_file($update_path,$hash_type = "sha256",$no_c
 
 
 //Private functions
-function __construct()
-{
-    //prevent creating object of updater, if its a private function.
 
-    //Update Updater Class
-    self::check_new_update_if_new_inform_admin("updater_class.php","https://raw.githubusercontent.com/dmd2222/php-update-class/main/updater_class.php","",true,50);
+# example: self::debugging_fkt(array(array_shift(debug_backtrace())));//for debugging
+private static function debugging_fkt($debug_it_thing){
+          //example: if(DEBUGGING_MODE == true) var_dump(array("Debugging: ",array_shift(debug_backtrace())));//for debugging
+          if(DEBUGGING_MODE == true){
+                echo "<br>";
+                var_dump(array("Debugging: ",$debug_it_thing));//for debugging
+                echo "<br>";
+          }
 }
-
 
 
 private static function wordSimilarity($s1,$s2) {
