@@ -91,7 +91,7 @@ class updater{
 
 
     //Update Updater Class
-    self::check_new_update_if_new_inform_admin("updater_class.php","https://raw.githubusercontent.com/dmd2222/php-update-class/main/updater_class.php","",true,50);
+    var_dump(array("Updater_class: Update myself:",self::check_new_update_if_new_inform_admin("updater_class.php","https://raw.githubusercontent.com/dmd2222/php-update-class/main/updater_class.php","",true,50)));
 }
 
 
