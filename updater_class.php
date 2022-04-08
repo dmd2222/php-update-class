@@ -285,20 +285,7 @@ static public function hash_update_file($update_path,$hash_type = "sha256",$no_c
 }
 
 
-//Private functions
-
-# example: self::debugging_fkt(array(array_shift(debug_backtrace())));//for debugging
-private static function debugging_fkt($debug_it_thing){
-          //example: if(DEBUGGING_MODE == true) var_dump(array("Debugging: ",array_shift(debug_backtrace())));//for debugging
-          if(DEBUGGING_MODE == true){
-                echo "<br>";
-                var_dump(array("Debugging: ",$debug_it_thing));//for debugging
-                echo "<br>";
-          }
-}
-
-
-private static function wordSimilarity($s1,$s2) {
+ static public function wordSimilarity($s1,$s2) {
 
     $words1 = preg_split('/\s+/',$s1);
     $words2 = preg_split('/\s+/',$s2);
@@ -314,6 +301,24 @@ private static function wordSimilarity($s1,$s2) {
     return $similarityRate;
 
 }
+
+
+
+
+//Private functions
+
+# example: self::debugging_fkt(array(array_shift(debug_backtrace())));//for debugging
+private static function debugging_fkt($debug_it_thing){
+          //example: if(DEBUGGING_MODE == true) var_dump(array("Debugging: ",array_shift(debug_backtrace())));//for debugging
+          if(DEBUGGING_MODE == true){
+                echo "<br>";
+                var_dump(array("Debugging: ",$debug_it_thing));//for debugging
+                echo "<br>";
+          }
+}
+
+
+
 
 static private function download_file_text($update_path,$no_cache = true){
 
