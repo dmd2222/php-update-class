@@ -18,9 +18,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-SOURCE: https://github.com/dmd2222/php-AES256-class.git
+SOURCE: https://github.com/dmd2222/ ###
    */
-
 
 class updater{
 
@@ -229,17 +228,20 @@ static public function check_new_update_if_new_inform_admin($filepath,$update_pa
       }
 
       
-      
+      $update_result= self::check_new_update($filepath,$update_path,$no_cache);
+      if($update_result==true){
+            //infor admin
+            $subject="Update required:" .  time();
+            $actual_path=dirname(__FILE__);
+            $message=$subject . " <br> " . "My file:" . self::hash_my_file($filepath,"sha256") . " File on server: " . self::hash_update_file($update_path,"sha256",true) . " <br> " . "May the service stops working if you dont update the file." . " <br> " . " Location: " . $actual_path;
+            mail($admin_email, $subject ,$message);
+            
+            self::debugging_fkt(array($admin_email, $subject ,$message,array_shift(debug_backtrace())));//for debugging
 
-    //infor admin
-    $subject="Update required:" .  time();
-    $actual_path=dirname(__FILE__);
-    $message=$subject . " <br> " . "My file:" . self::hash_my_file($filepath,"sha256") . " File on server: " . self::hash_update_file($update_path,"sha256",true) . " <br> " . "May the service stops working if you dont update the file." . " <br> " . " Location: " . $actual_path;
-    mail($admin_email, $subject ,$message);
-    
-    self::debugging_fkt(array($admin_email, $subject ,$message,array_shift(debug_backtrace())));//for debugging
+      }
 
-    return self::check_new_update($filepath,$update_path,$no_cache);
+
+    return $update_result;
 
 
 }
