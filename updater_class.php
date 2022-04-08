@@ -22,7 +22,9 @@ class updater{
         //check response
         if($check_response<>false){
             if($response_result =="" || $contents == ""){
-                throw new Exception("updater_class: do_file_update: Local file or update is empty. If this is correct, please update manually.");
+                $err="updater_class: do_file_update: Local file or update is empty. If this is correct, please update manually.";
+                var_dump($err);
+                throw new Exception($err);
             }
         }
 
