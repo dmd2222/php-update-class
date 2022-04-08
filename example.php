@@ -11,7 +11,7 @@ echo "<br>";
 
 //Make update of file
 if($_GET["update"]=="yes"){
-        updater::do_file_update("example.php","https://raw.githubusercontent.com/dmd2222/php-update-class/main/example.php",true,true,true,50);
+        updater::do_file_update("example.php","https://raw.githubusercontent.com/dmd2222/php-update-class/main/example.php",true,true,true,0);
 }
 
 
