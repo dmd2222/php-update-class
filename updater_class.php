@@ -4,7 +4,7 @@ class updater{
 
 
     //Public functions
-    static public function do_file_update($filepath,$update_path,$no_cache = true,$make_backup_file=false){
+    static public function do_file_update($filepath,$update_path,$no_cache = true, $make_backup_file=false,$check_response=true){
 
         
         //check vars
@@ -16,6 +16,12 @@ class updater{
         $response_result = self::download_file_text($update_path,$no_cache);
         $contents = self::read_file($filepath);
         
+        //check response
+        if($check_response<>false){
+            if($response_result =="" || $contents == ""){
+                throw new Exception("updater_class: do_file_update: Local file or update is empty. If this is correct, please update manually.");
+            }
+        }
         
         //compare values
         if($contents<>$response_result){
@@ -145,6 +151,25 @@ static public function hash_update_file($update_path,$hash_type = "sha256",$no_c
 function __construct()
 {
     //prevent creating object of updater
+}
+
+
+
+private static function wordSimilarity($s1,$s2) {
+
+    $words1 = preg_split('/\s+/',$s1);
+    $words2 = preg_split('/\s+/',$s2);
+    $diffs1 = array_diff($words2,$words1);
+    $diffs2 = array_diff($words1,$words2);
+
+    $diffsLength = strlen(join("",$diffs1).join("",$diffs2));
+    $wordsLength = strlen(join("",$words1).join("",$words2));
+    if(!$wordsLength) return 0;
+
+    $differenceRate = ( $diffsLength / $wordsLength );
+    $similarityRate = 1 - $differenceRate;
+    return $similarityRate;
+
 }
 
 static private function download_file_text($update_path,$no_cache = true){
