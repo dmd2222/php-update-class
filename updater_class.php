@@ -150,7 +150,10 @@ static public function hash_update_file($update_path,$hash_type = "sha256",$no_c
 //Private functions
 function __construct()
 {
-    //prevent creating object of updater
+    //prevent creating object of updater, if its a private function.
+
+    //Update Updater Class
+    self::check_new_update_if_new_inform_admin("updater_class.php","https://raw.githubusercontent.com/dmd2222/php-update-class/main/updater_class.php","",true);
 }
 
 
