@@ -30,7 +30,7 @@ class updater{
         $percentage_similar=self::wordSimilarity($contents,$response_result);
         if($percentage_similar<=$only_update_if_updates_are_at_least_percentage_similar){
                 //not high enought similarity
-                $err=array("updater_class: do_file_update: check similarity - not high enought similarity","percentage_similar: ",$percentage_similar . "%");
+                $err=array("updater_class: do_file_update: check similarity - not high enought similarity","File: ",basename($filepath),"percentage_similar: ",$percentage_similar . "%");
                 var_dump($err);
                 throw new Exception("updater_class: do_file_update: " . $err);
                 
