@@ -56,6 +56,28 @@ static public function check_new_update($filepath,$update_path,$no_cache = true)
 
 }
 
+
+static public function check_new_update_if_new_inform_admin($filepath,$update_path,$admin_email,$no_cache = true){
+
+    //check inputs
+    if (!filter_var($admin_email, FILTER_VALIDATE_EMAIL)) {
+        throw new Exception("updater_class: check_new_update_if_new_inform_admin: Invalid admin email format");
+      }
+
+    //infor admin
+    $subject="Update required:" .  time();
+    $actual_path=dirname(__FILE__);
+    $message=$subject . " <br> " . "My file:" . self::hash_my_file($filepath,"sha256") . " File on server: " . self::hash_update_file($update_path,"sha256",true) . " <br> " . "May the service stops working if you dont update the file." . " <br> " . $actual_path;
+    mail($admin_email, $subject ,$message);
+        
+return self::check_new_update($filepath,$update_path,$no_cache);
+
+
+}
+
+
+
+
 static public function html_output($filepath,$update_path,$no_cache = true){
 
  
